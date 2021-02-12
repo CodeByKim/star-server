@@ -1,6 +1,12 @@
-#include <iostream>
+#include "CommonLibrary.h"
+#include "Server.h"
 
 int main()
 {
-	std::cout << "hello world" << std::endl;
+	Server server;
+
+	if (server.Listen())
+	{
+		server.Run();
+	}	
 }

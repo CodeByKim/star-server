@@ -20,5 +20,11 @@
 #define SERVER_PORT 3000
 #define PACKET_SIZE 16
 
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 16
 #define MAX_CCU 10
+
+struct Position
+{
+	int x;
+	int y;
+};

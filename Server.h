@@ -19,5 +19,6 @@ private:
 	Acceptor mAcceptor;
 	NetworkSession mSession[MAX_CCU];
 	int mConnectedUsers;
+	int mID;
 	FD_SET reads;
 };

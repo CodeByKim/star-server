@@ -34,13 +34,13 @@ bool Acceptor::Listen()
 	return true;
 }
 
-void Acceptor::Accept(NetworkSession& session)
+void Acceptor::Accept(NetworkSession& session, int id)
 {
 	SOCKADDR_IN clientAddr;
 	int addrSize = sizeof(clientAddr);
 	
 	SOCKET clientSocket = accept(mListenSocket, (SOCKADDR*)&clientAddr, &addrSize);
-	session.OnAccept(clientSocket, clientAddr);
+	session.OnAccept(clientSocket, clientAddr, id);
 	std::wcout << L"Net Client" << std::endl;
 }
 

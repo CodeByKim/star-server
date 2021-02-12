@@ -10,7 +10,7 @@ public:
 	~Acceptor();
 
 	bool Listen();
-	void Accept(NetworkSession& session);
+	void Accept(NetworkSession& session, int id);
 	SOCKET GetSocket();
 
 private:

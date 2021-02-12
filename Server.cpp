@@ -3,6 +3,7 @@
 Server::Server()
 	: mSession{}
 	, mConnectedUsers(0)
+	, mID(0)
 {
 	WSADATA data;
 	int result = WSAStartup(MAKEWORD(2, 2), &data);
@@ -43,8 +44,9 @@ void Server::Accept()
 	{
 		if (!mSession[i].IsEnable())
 		{
-			mAcceptor.Accept(mSession[i]);
+			mAcceptor.Accept(mSession[i], mID);
 			mConnectedUsers += 1;
+			mID += 1;
 		}
 	}
 }
@@ -69,7 +71,17 @@ void Server::Run()
 		{
 			if (FD_ISSET(mSession[i].GetSocket(), &reads))
 			{
-				mSession[i].OnReceive();				
+				char buffer[BUFFER_SIZE];
+				int recvCount = recv(mSession[i].GetSocket(), buffer, BUFFER_SIZE, 0);
+
+				if (recvCount == 0)
+				{
+					mConnectedUsers -= 1;
+					mSession[i].OnDisconnect();
+					continue;
+				}
+
+				mSession[i].OnReceive(buffer, recvCount);
 			}
 		}
 	}

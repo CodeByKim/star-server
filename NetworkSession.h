@@ -7,7 +7,7 @@ public:
 	NetworkSession();
 	~NetworkSession();
 
-	void OnConnect(SOCKET socket, SOCKADDR_IN addr);
+	void OnAccept(SOCKET socket, SOCKADDR_IN addr);
 	void OnDisconnect();
 	void OnReceive();
 
@@ -16,5 +16,6 @@ public:
 
 private:
 	SOCKET mSocket;
+	SOCKADDR_IN mAddr;
 };
 

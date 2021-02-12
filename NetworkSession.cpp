@@ -2,6 +2,7 @@
 
 NetworkSession::NetworkSession()
 	: mSocket(INVALID_SOCKET)
+	, mAddr{0,}
 {
 }
 
@@ -9,9 +10,10 @@ NetworkSession::~NetworkSession()
 {
 }
 
-void NetworkSession::OnConnect(SOCKET socket, SOCKADDR_IN addr)
+void NetworkSession::OnAccept(SOCKET socket, SOCKADDR_IN addr)
 {
-
+	mSocket = socket;
+	mAddr = addr;
 }
 
 void NetworkSession::OnReceive()

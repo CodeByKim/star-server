@@ -40,7 +40,8 @@ void Acceptor::Accept(NetworkSession& session)
 	int addrSize = sizeof(clientAddr);
 	
 	SOCKET clientSocket = accept(mListenSocket, (SOCKADDR*)&clientAddr, &addrSize);
-	session.OnConnect(clientSocket, clientAddr);
+	session.OnAccept(clientSocket, clientAddr);
+	std::wcout << L"Net Client" << std::endl;
 }
 
 SOCKET Acceptor::GetSocket()

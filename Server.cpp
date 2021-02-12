@@ -44,6 +44,7 @@ void Server::Accept()
 		if (!mSession[i].IsEnable())
 		{
 			mAcceptor.Accept(mSession[i]);
+			mConnectedUsers += 1;
 		}
 	}
 }

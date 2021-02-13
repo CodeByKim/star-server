@@ -10,18 +10,39 @@ enum class ePacketNumber
 	MoveStar = 3
 };
 
-class Packet
+class Packet : public std::enable_shared_from_this<Packet>
 {
 public:
 	int protocol;
-	virtual char* Serialize() = 0;
+	char* buffer = nullptr;
+	virtual void Serialize() = 0;
+
+	~Packet()
+	{
+		if (buffer != nullptr)
+		{
+			delete[] buffer;
+			std::cout << "패킷 삭제" << std::endl;
+		}
+			
+	}
+
+	std::shared_ptr<Packet> GetSharedPtr()
+	{
+		return shared_from_this();
+	}
+
+	char* GetBuffer()
+	{
+		return buffer;
+	}
 };
 
 class GetIdPacket : public Packet
 {
 public:
 	GetIdPacket();
-	char* Serialize() override;
+	void Serialize() override;
 
 	int id;
 };
@@ -30,7 +51,7 @@ class CreateStarPacket : public Packet
 {
 public:	
 	CreateStarPacket();
-	char* Serialize() override;
+	void Serialize() override;
 
 	int id;
 	int x;
@@ -41,7 +62,7 @@ class RemoveStarPacket : public Packet
 {
 public:	
 	RemoveStarPacket();
-	char* Serialize() override;
+	void Serialize() override;
 
 	int id;
 };
@@ -51,7 +72,7 @@ class MoveStarPacket : public Packet
 public:
 	MoveStarPacket();
 	void Deserialize(char* buffer);
-	char* Serialize() override;
+	void Serialize() override;
 
 	int id;
 	int x;

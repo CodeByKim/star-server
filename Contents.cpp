@@ -14,20 +14,21 @@ void Contents::Process(NetworkSession& session, char* recvData)
 	switch (protocol)
 	{
 	case 3:		
-		MoveStarPacket recvPacket;
+		MoveStarPacket recvPacket;		
 		recvPacket.Deserialize(recvData);
 		session.SetPos(recvPacket.x, recvPacket.y);
+		
+		std::shared_ptr<MoveStarPacket> packet = std::make_shared<MoveStarPacket>();
+		packet->id = recvPacket.id;
+		packet->x = recvPacket.x;
+		packet->y = recvPacket.y;
 
-		int requestId = recvPacket.id;
 		for (size_t i = 0; i < mConnectedSessions.size(); i++)
 		{
-			if (mConnectedSessions[i]->GetID() != requestId)
+			if (mConnectedSessions[i]->GetID() != recvPacket.id)
 			{
-				MoveStarPacket packet;				
-				packet.id = requestId;
-				packet.x = recvPacket.x;
-				packet.y = recvPacket.y;
-				mConnectedSessions[i]->Send(packet.Serialize());
+				//MoveStarPacket packet;								
+				mConnectedSessions[i]->Send(packet);
 			}
 		}
 		break;
@@ -42,10 +43,11 @@ Contents& Contents::GetInstance()
 
 void Contents::OnConnectedClinet(NetworkSession& session)
 {	
-	GetIdPacket packet;	
-	packet.id = session.GetID();
+	//GetIdPacket packet;
+	std::shared_ptr<GetIdPacket> packet = std::make_shared<GetIdPacket>();
+	packet->id = session.GetID();
 
-	session.Send(packet.Serialize());	
+	session.Send(packet);
 	mConnectedSessions.push_back(&session);
 
 	OnCreateClient(session);
@@ -55,10 +57,10 @@ void Contents::OnCreateClient(NetworkSession& session)
 {
 	Position& newClientPos = session.GetPosition();
 
-	CreateStarPacket broadcastPacket;	
-	broadcastPacket.id = session.GetID();
-	broadcastPacket.x = newClientPos.x;
-	broadcastPacket.y = newClientPos.x;
+	std::shared_ptr<CreateStarPacket> broadcastPacket = std::make_shared<CreateStarPacket>();
+	broadcastPacket->id = session.GetID();
+	broadcastPacket->x = newClientPos.x;
+	broadcastPacket->y = newClientPos.x;
 
 	for (size_t i = 0; i < mConnectedSessions.size(); i++)
 	{
@@ -67,15 +69,17 @@ void Contents::OnCreateClient(NetworkSession& session)
 		{
 			Position& pos = mConnectedSessions[i]->GetPosition();
 
-			CreateStarPacket packet;			
-			packet.id = mConnectedSessions[i]->GetID();
-			packet.x = pos.x;
-			packet.y = pos.y;
+			//CreateStarPacket packet;			
+			std::shared_ptr<CreateStarPacket> packet = std::make_shared<CreateStarPacket>();
 
-			session.Send(packet.Serialize());
+			packet->id = mConnectedSessions[i]->GetID();
+			packet->x = pos.x;
+			packet->y = pos.y;
+
+			session.Send(packet);
 		}
 
-		mConnectedSessions[i]->Send(broadcastPacket.Serialize());
+		mConnectedSessions[i]->Send(broadcastPacket);
 	}
 }
 
@@ -93,11 +97,11 @@ void Contents::OnDisconnectClinet(int id)
 	for (size_t i = 0; i < mConnectedSessions.size(); i++)
 	{
 		if (mConnectedSessions[i]->GetID() != id)
-		{
-			RemoveStarPacket packet;
-			packet.id = id;
-			
-			mConnectedSessions[i]->Send(packet.Serialize());
+		{			
+			std::shared_ptr<RemoveStarPacket> packet = std::make_shared<RemoveStarPacket>();
+			packet->id = id;
+
+			mConnectedSessions[i]->Send(packet);
 		}
 	}
 }

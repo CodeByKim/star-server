@@ -1,5 +1,6 @@
 #include "NetworkSession.h"
 #include "Contents.h"
+#include "Packet.h"
 
 NetworkSession::NetworkSession()
 	: mSocket(INVALID_SOCKET)
@@ -42,12 +43,18 @@ void NetworkSession::Release()
 	mPosition = { 10, 10 };		
 }
 
-void NetworkSession::Send(char* buffer)
-{
-	send(mSocket, buffer, PACKET_SIZE, 0);
+//void NetworkSession::Send(char* buffer)
+//{
+//	send(mSocket, buffer, PACKET_SIZE, 0);
+//
+//	//buffer를 shared_ptr로 해야한다. 그리고 enable_shread_from_this를 상속받아서 구현해야 할듯...
+//	//패킷을 브로드캐스팅할 때 맘대로 delete 하면 안됨	
+//}
 
-	//buffer를 shared_ptr로 해야한다. 그리고 enable_shread_from_this를 상속받아서 구현해야 할듯...
-	//패킷을 브로드캐스팅할 때 맘대로 delete 하면 안됨	
+void NetworkSession::Send(std::shared_ptr<Packet> packet)
+{
+	packet->Serialize();
+	send(mSocket, packet->GetBuffer(), PACKET_SIZE, 0);
 }
 
 SOCKET NetworkSession::GetSocket()

@@ -5,14 +5,14 @@ GetIdPacket::GetIdPacket()
 	protocol = (int)ePacketNumber::GetID;
 }
 
-char* GetIdPacket::Serialize()
+void GetIdPacket::Serialize()
 {	
-	char* buffer = new char[PACKET_SIZE];
+	buffer = new char[PACKET_SIZE];
 
 	CopyMemory(buffer + 0, &protocol, sizeof(int));
 	CopyMemory(buffer + 4, &id, sizeof(int));
 
-	return buffer;
+	//return buffer;
 }
 
 CreateStarPacket::CreateStarPacket()
@@ -20,16 +20,16 @@ CreateStarPacket::CreateStarPacket()
 	protocol = (int)ePacketNumber::CreateStar;
 }
 
-char* CreateStarPacket::Serialize()
+void CreateStarPacket::Serialize()
 {	
-	char* buffer = new char[PACKET_SIZE];
+	buffer = new char[PACKET_SIZE];
 
 	CopyMemory(buffer + 0, &protocol, sizeof(int));
 	CopyMemory(buffer + 4, &id, sizeof(int));
 	CopyMemory(buffer + 8, &x, sizeof(int));
 	CopyMemory(buffer + 12, &y, sizeof(int));
 
-	return buffer;
+	//return buffer;
 }
 
 RemoveStarPacket::RemoveStarPacket()
@@ -37,14 +37,14 @@ RemoveStarPacket::RemoveStarPacket()
 	protocol = (int)ePacketNumber::RemoveStar;
 }
 
-char* RemoveStarPacket::Serialize()
+void RemoveStarPacket::Serialize()
 {	
-	char* buffer = new char[PACKET_SIZE];
+	buffer = new char[PACKET_SIZE];
 
 	CopyMemory(buffer + 0, &protocol, sizeof(int));
 	CopyMemory(buffer + 4, &id, sizeof(int));
 
-	return buffer;
+	//return buffer;
 }
 
 MoveStarPacket::MoveStarPacket()
@@ -52,16 +52,16 @@ MoveStarPacket::MoveStarPacket()
 	protocol = (int)ePacketNumber::MoveStar;
 }
 
-char* MoveStarPacket::Serialize()
+void MoveStarPacket::Serialize()
 {	
-	char* buffer = new char[PACKET_SIZE];
+	buffer = new char[PACKET_SIZE];
 
 	CopyMemory(buffer + 0, &protocol, sizeof(int));
 	CopyMemory(buffer + 4, &id, sizeof(int));
 	CopyMemory(buffer + 8, &x, sizeof(int));
 	CopyMemory(buffer + 12, &y, sizeof(int));
 
-	return buffer;
+	//return buffer;
 }
 
 void MoveStarPacket::Deserialize(char* buffer)

@@ -2,6 +2,14 @@
 
 #include "CommonLibrary.h"
 
+enum class ePacketNumber
+{
+	GetID = 0,
+	CreateStar = 1,
+	RemoveStar = 2,
+	MoveStar = 3
+};
+
 class Packet
 {
 public:
@@ -19,8 +27,7 @@ public:
 
 class CreateStarPacket : public Packet
 {
-public:
-	//void Deserialize(char* buffer) override;
+public:	
 	char* Serialize() override;
 
 	int id;
@@ -30,8 +37,7 @@ public:
 
 class RemoveStarPacket : public Packet
 {
-public:
-	//void Deserialize(char* buffer) override;
+public:	
 	char* Serialize() override;
 
 	int id;
@@ -40,7 +46,7 @@ public:
 class MoveStarPacket : public Packet
 {
 public:
-	//void Deserialize(char* buffer) override;
+	void Deserialize(char* buffer);
 	char* Serialize() override;
 
 	int id;

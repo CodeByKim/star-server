@@ -26,14 +26,16 @@ bool Server::Listen()
 
 void Server::RegisterForSelect()
 {
+	std::cout << "RegisterForSelect" << std::endl;
+
 	FD_ZERO(&reads);
 	FD_SET(mAcceptor.GetSocket(), &reads);
 
 	for (int i = 0; i < MAX_CCU; i++)
-	{
+	{						
 		if (mSession[i].IsEnable())
 		{
-			FD_SET(mSession[i].GetSocket(), &reads);
+			FD_SET(mSession[i].GetSocket(), &reads);			
 		}
 	}
 }
@@ -44,9 +46,12 @@ void Server::Accept()
 	{
 		if (!mSession[i].IsEnable())
 		{
+			std::cout << "Accept ÁøÀÔ" << std::endl;
 			mAcceptor.Accept(mSession[i], mID);
 			mConnectedUsers += 1;
 			mID += 1;
+
+			return;
 		}
 	}
 }

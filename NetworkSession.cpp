@@ -5,7 +5,7 @@ NetworkSession::NetworkSession()
 	: mSocket(INVALID_SOCKET)
 	, mAddr{0,}
 	, mID(-1)
-	, mPosition{10,10}
+	, mPosition{10,10}	
 {
 }
 
@@ -17,14 +17,13 @@ void NetworkSession::OnAccept(SOCKET socket, SOCKADDR_IN addr, int id)
 {
 	mSocket = socket;
 	mAddr = addr;
-	mID = id;
-
+	mID = id;	
 	Contents::GetInstance().OnConnectedClinet(*this);
 }
 
 void NetworkSession::OnReceive(char* buffer, int recvCount)
 {	
-	Contents::GetInstance().Process(buffer);
+	Contents::GetInstance().Process(*this, buffer);
 }
 
 void NetworkSession::OnDisconnect()
@@ -48,7 +47,7 @@ SOCKET NetworkSession::GetSocket()
 
 bool NetworkSession::IsEnable()
 {
-	return mSocket != INVALID_SOCKET;
+	return mSocket != INVALID_SOCKET;	
 }
 
 int NetworkSession::GetID()
@@ -59,4 +58,10 @@ int NetworkSession::GetID()
 Position& NetworkSession::GetPosition()
 {
 	return mPosition;
+}
+
+void NetworkSession::SetPos(int x, int y)
+{
+	mPosition.x = x;
+	mPosition.y = y;
 }

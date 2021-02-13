@@ -14,6 +14,9 @@ Acceptor::~Acceptor()
 bool Acceptor::Listen()
 {
 	mListenSocket = socket(PF_INET, SOCK_STREAM, 0);
+	/*u_long on = 1;
+	ioctlsocket(mListenSocket, FIONBIO, &on);*/
+
 	ZeroMemory(&mListenAddr, sizeof(SOCKADDR_IN));
 	mListenAddr.sin_family = AF_INET;
 	mListenAddr.sin_addr.S_un.S_addr = htonl(INADDR_ANY);
@@ -40,8 +43,11 @@ void Acceptor::Accept(NetworkSession& session, int id)
 	int addrSize = sizeof(clientAddr);
 	
 	SOCKET clientSocket = accept(mListenSocket, (SOCKADDR*)&clientAddr, &addrSize);
-	session.OnAccept(clientSocket, clientAddr, id);
-	std::wcout << L"Net Client" << std::endl;
+	if (clientSocket != SOCKET_ERROR)
+	{
+		session.OnAccept(clientSocket, clientAddr, id);
+		std::wcout << L"Net Client" << std::endl;
+	}	
 }
 
 SOCKET Acceptor::GetSocket()

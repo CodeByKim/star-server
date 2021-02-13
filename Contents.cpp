@@ -6,11 +6,33 @@ Contents::Contents()
 {
 }
 
-void Contents::Process(char* recvData)
+void Contents::Process(NetworkSession& session, char* recvData)
 {
-	//패킷을 만들고..
-	
-	//패킷을 핸들링한다.
+	int protocol = -1;
+	CopyMemory(&protocol, recvData, sizeof(int));
+
+	switch (protocol)
+	{
+	case 3:		
+		MoveStarPacket recvPacket;
+		recvPacket.Deserialize(recvData);
+		session.SetPos(recvPacket.x, recvPacket.y);
+
+		int requestId = recvPacket.id;
+		for (int i = 0; i < mConnectedSessions.size(); i++)
+		{
+			if (mConnectedSessions[i]->GetID() != requestId)
+			{
+				MoveStarPacket packet;
+				packet.protocol = 3;
+				packet.id = requestId;
+				packet.x = recvPacket.x;
+				packet.y = recvPacket.y;
+				mConnectedSessions[i]->Send(packet.Serialize());
+			}
+		}
+		break;
+	}
 }
 
 Contents& Contents::GetInstance()
@@ -59,8 +81,6 @@ void Contents::OnCreateClient(NetworkSession& session)
 
 		mConnectedSessions[i]->Send(broadcastPacket.Serialize());
 	}
-
-	
 }
 
 void Contents::OnMove()

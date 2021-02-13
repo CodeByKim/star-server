@@ -16,11 +16,12 @@ public:
 	bool IsEnable();
 	int GetID();
 	Position& GetPosition();
+	void SetPos(int x, int y);
 
 private:
 	SOCKET mSocket;
 	SOCKADDR_IN mAddr;
 	int mID;
-	Position mPosition;
+	Position mPosition;	
 };
 

@@ -27,9 +27,19 @@ void NetworkSession::OnReceive(char* buffer, int recvCount)
 }
 
 void NetworkSession::OnDisconnect()
-{
+{	
 	closesocket(mSocket);
-	mSocket = INVALID_SOCKET;	
+	Contents::GetInstance().OnDisconnectClinet(mID);
+
+	Release();	
+}
+
+void NetworkSession::Release()
+{
+	mSocket = INVALID_SOCKET;
+	mAddr = { 0, };
+	mID = -1;
+	mPosition = { 10, 10 };		
 }
 
 void NetworkSession::Send(char* buffer)

@@ -19,6 +19,8 @@ public:
 	void SetPos(int x, int y);
 
 private:
+	void Release();
+
 	SOCKET mSocket;
 	SOCKADDR_IN mAddr;
 	int mID;

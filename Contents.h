@@ -9,6 +9,7 @@ public:
 	Contents();
 
 	void OnConnectedClinet(NetworkSession& session);
+	void OnDisconnectClinet(int id);
 	void Process(NetworkSession& session, char* recvData);
 	
 	static Contents& GetInstance();	

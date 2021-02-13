@@ -25,9 +25,7 @@ bool Server::Listen()
 }
 
 void Server::RegisterForSelect()
-{
-	std::cout << "RegisterForSelect" << std::endl;
-
+{	
 	FD_ZERO(&reads);
 	FD_SET(mAcceptor.GetSocket(), &reads);
 
@@ -79,7 +77,7 @@ void Server::Run()
 				char buffer[BUFFER_SIZE];
 				int recvCount = recv(mSession[i].GetSocket(), buffer, BUFFER_SIZE, 0);
 
-				if (recvCount == 0)
+				if (recvCount == 0 || recvCount == SOCKET_ERROR)
 				{
 					mConnectedUsers -= 1;
 					mSession[i].OnDisconnect();

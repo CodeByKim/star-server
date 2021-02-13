@@ -19,12 +19,11 @@ void Contents::Process(NetworkSession& session, char* recvData)
 		session.SetPos(recvPacket.x, recvPacket.y);
 
 		int requestId = recvPacket.id;
-		for (int i = 0; i < mConnectedSessions.size(); i++)
+		for (size_t i = 0; i < mConnectedSessions.size(); i++)
 		{
 			if (mConnectedSessions[i]->GetID() != requestId)
 			{
-				MoveStarPacket packet;
-				packet.protocol = 3;
+				MoveStarPacket packet;				
 				packet.id = requestId;
 				packet.x = recvPacket.x;
 				packet.y = recvPacket.y;
@@ -43,8 +42,7 @@ Contents& Contents::GetInstance()
 
 void Contents::OnConnectedClinet(NetworkSession& session)
 {	
-	GetIdPacket packet;
-	packet.protocol = 0;
+	GetIdPacket packet;	
 	packet.id = session.GetID();
 
 	session.Send(packet.Serialize());	
@@ -57,21 +55,19 @@ void Contents::OnCreateClient(NetworkSession& session)
 {
 	Position& newClientPos = session.GetPosition();
 
-	CreateStarPacket broadcastPacket;
-	broadcastPacket.protocol = 1;
+	CreateStarPacket broadcastPacket;	
 	broadcastPacket.id = session.GetID();
 	broadcastPacket.x = newClientPos.x;
 	broadcastPacket.y = newClientPos.x;
 
-	for (int i = 0; i < mConnectedSessions.size(); i++)
+	for (size_t i = 0; i < mConnectedSessions.size(); i++)
 	{
 		//새로 접속한 유저한테는 기존 유저데이터 전부 보내줘야 한다.
 		if (session.GetID() != mConnectedSessions[i]->GetID())
 		{
 			Position& pos = mConnectedSessions[i]->GetPosition();
 
-			CreateStarPacket packet;
-			packet.protocol = 1;
+			CreateStarPacket packet;			
 			packet.id = mConnectedSessions[i]->GetID();
 			packet.x = pos.x;
 			packet.y = pos.y;
@@ -80,6 +76,29 @@ void Contents::OnCreateClient(NetworkSession& session)
 		}
 
 		mConnectedSessions[i]->Send(broadcastPacket.Serialize());
+	}
+}
+
+void Contents::OnDisconnectClinet(int id)
+{
+	for (size_t i = 0; i < mConnectedSessions.size(); i++)
+	{
+		if (mConnectedSessions[i]->GetID() == id)
+		{
+			mConnectedSessions.erase(mConnectedSessions.begin() + i);
+			break;
+		}
+	}
+
+	for (size_t i = 0; i < mConnectedSessions.size(); i++)
+	{
+		if (mConnectedSessions[i]->GetID() != id)
+		{
+			RemoveStarPacket packet;
+			packet.id = id;
+			
+			mConnectedSessions[i]->Send(packet.Serialize());
+		}
 	}
 }
 

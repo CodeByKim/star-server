@@ -1,8 +1,12 @@
 #include "Packet.h"
 
-char* GetIdPacket::Serialize()
+GetIdPacket::GetIdPacket()
 {
-	//int proto = 0;
+	protocol = (int)ePacketNumber::GetID;
+}
+
+char* GetIdPacket::Serialize()
+{	
 	char* buffer = new char[PACKET_SIZE];
 
 	CopyMemory(buffer + 0, &protocol, sizeof(int));
@@ -11,9 +15,13 @@ char* GetIdPacket::Serialize()
 	return buffer;
 }
 
-char* CreateStarPacket::Serialize()
+CreateStarPacket::CreateStarPacket()
 {
-	//int proto = 1;
+	protocol = (int)ePacketNumber::CreateStar;
+}
+
+char* CreateStarPacket::Serialize()
+{	
 	char* buffer = new char[PACKET_SIZE];
 
 	CopyMemory(buffer + 0, &protocol, sizeof(int));
@@ -24,9 +32,13 @@ char* CreateStarPacket::Serialize()
 	return buffer;
 }
 
-char* RemoveStarPacket::Serialize()
+RemoveStarPacket::RemoveStarPacket()
 {
-	//int proto = 2;
+	protocol = (int)ePacketNumber::RemoveStar;
+}
+
+char* RemoveStarPacket::Serialize()
+{	
 	char* buffer = new char[PACKET_SIZE];
 
 	CopyMemory(buffer + 0, &protocol, sizeof(int));
@@ -35,9 +47,13 @@ char* RemoveStarPacket::Serialize()
 	return buffer;
 }
 
-char* MoveStarPacket::Serialize()
+MoveStarPacket::MoveStarPacket()
 {
-	//int proto = 3;
+	protocol = (int)ePacketNumber::MoveStar;
+}
+
+char* MoveStarPacket::Serialize()
+{	
 	char* buffer = new char[PACKET_SIZE];
 
 	CopyMemory(buffer + 0, &protocol, sizeof(int));

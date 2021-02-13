@@ -20,6 +20,7 @@ public:
 class GetIdPacket : public Packet
 {
 public:
+	GetIdPacket();
 	char* Serialize() override;
 
 	int id;
@@ -28,6 +29,7 @@ public:
 class CreateStarPacket : public Packet
 {
 public:	
+	CreateStarPacket();
 	char* Serialize() override;
 
 	int id;
@@ -38,6 +40,7 @@ public:
 class RemoveStarPacket : public Packet
 {
 public:	
+	RemoveStarPacket();
 	char* Serialize() override;
 
 	int id;
@@ -46,6 +49,7 @@ public:
 class MoveStarPacket : public Packet
 {
 public:
+	MoveStarPacket();
 	void Deserialize(char* buffer);
 	char* Serialize() override;
 
